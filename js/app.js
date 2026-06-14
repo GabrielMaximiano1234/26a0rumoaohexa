@@ -316,7 +316,7 @@ function initDraft() {
   document.getElementById("draft-players-options").classList.remove("hidden");
   
   renderPitch();
-  renderDraftRound();
+  proximaRodadaDraft();
 }
 
 function renderPitch() {
@@ -352,64 +352,104 @@ function renderPitch() {
   });
 }
 
-function renderDraftRound() {
+function proximaRodadaDraft() {
   const optionsGrid = document.getElementById("draft-players-options");
   optionsGrid.innerHTML = "";
   
-  if (gameState.currentDraftIndex >= 11) {
+  if (gameState.currentDraftIndex === -1) {
     finishDraft();
     return;
   }
   
-  const currentPosCfg = formations[gameState.selectedTactic][gameState.currentDraftIndex];
+  // Sortear uma equipe inteira do banco de dados
+  const randomTeam = brazilDraftDatabase[Math.floor(Math.random() * brazilDraftDatabase.length)];
+  gameState.currentDrawnTeam = randomTeam;
   
   // Atualizar cabeçalhos de progresso
-  document.getElementById("draft-round-title").innerText = `CONVOCAÇÃO - POSIÇÃO ${gameState.currentDraftIndex + 1} / 11`;
-  document.getElementById("draft-roll-info").innerText = `Escolha um(a) craque da posição [${currentPosCfg.label}] (${currentPosCfg.pos})`;
+  const filledCount = gameState.draftedPlayers.filter(p => p !== null).length;
+  document.getElementById("draft-round-title").innerText = `CONVOCAÇÃO - ELENCO: ${randomTeam.name.toUpperCase()}`;
+  document.getElementById("draft-roll-info").innerText = `Técnico: ${randomTeam.coach}. Escale um craque para uma das vagas de [${gameState.selectedTactic}]`;
   
-  // Buscar no Banco de Dados
-  let pool = [];
-  brazilDraftDatabase.forEach(team => {
-    team.players.forEach(p => {
-      // Filtrar por posição exata (GOL, DEF, MEI, ATA) e evitar duplicidade
-      if (p.pos === currentPosCfg.pos && !gameState.draftedNames.has(p.name)) {
-        pool.push({
-          name: p.name,
-          pos: p.pos,
-          rating: p.rating,
-          desc: p.desc,
-          year: team.name
-        });
-      }
-    });
-  });
+  renderCandidatos();
+  renderPitch();
+}
+
+function hasOpenSlot(pos) {
+  const formationCfg = formations[gameState.selectedTactic];
+  const requiredCount = formationCfg.filter(slot => slot.pos === pos).length;
+  const filledCount = gameState.draftedPlayers.filter((drafted, i) => drafted !== null && formationCfg[i].pos === pos).length;
+  return filledCount < requiredCount;
+}
+
+function renderCandidatos() {
+  const optionsGrid = document.getElementById("draft-players-options");
+  optionsGrid.innerHTML = "";
   
-  // Sorteio de 4 jogadores do pool
-  shuffleArray(pool);
-  const selectedOptions = pool.slice(0, 4);
+  const team = gameState.currentDrawnTeam;
+  if (!team) return;
   
-  selectedOptions.forEach(player => {
+  team.players.forEach(player => {
     const card = document.createElement("div");
     card.className = "player-card";
+    
+    const isAlreadyDrafted = gameState.draftedNames.has(player.name);
+    const openSlotExists = hasOpenSlot(player.pos);
+    const isDisabled = isAlreadyDrafted || !openSlotExists;
+    
+    if (isDisabled) {
+      card.classList.add("disabled-card");
+    }
+    
     card.innerHTML = `
       <div class="card-ovr-medal">${player.rating}</div>
-      <div class="card-year-badge">${player.year}</div>
+      <div class="card-year-badge">${team.name}</div>
       <div class="player-card-name">${player.name}</div>
       <div class="player-card-sub">${player.pos}</div>
       <div class="player-card-desc">${player.desc}</div>
     `;
+    
     card.addEventListener("click", () => {
-      draftPlayer(player);
+      if (isDisabled) {
+        let msg = "";
+        if (isAlreadyDrafted) {
+          msg = `Você já convocou ${player.name} para a sua Seleção!`;
+        } else {
+          msg = `Não há mais vagas para a posição de ${player.pos} no esquema ${gameState.selectedTactic}!`;
+        }
+        alert(msg);
+        return;
+      }
+      draftPlayer(player, team.name);
     });
+    
     optionsGrid.appendChild(card);
   });
 }
 
-function draftPlayer(player) {
-  gameState.draftedPlayers[gameState.currentDraftIndex] = player;
+function draftPlayer(player, teamName) {
+  // Encontrar a primeira vaga aberta daquela posição na tática
+  const formationCfg = formations[gameState.selectedTactic];
+  let emptyIdx = -1;
+  for (let i = 0; i < formationCfg.length; i++) {
+    if (formationCfg[i].pos === player.pos && gameState.draftedPlayers[i] === null) {
+      emptyIdx = i;
+      break;
+    }
+  }
+  
+  if (emptyIdx === -1) return; // Segurança
+  
+  gameState.draftedPlayers[emptyIdx] = {
+    name: player.name,
+    pos: player.pos,
+    rating: player.rating,
+    desc: player.desc,
+    year: teamName
+  };
+  
   gameState.draftedNames.add(player.name);
   
-  // Calcular média de OVR parcial
+  // Calcular média de OVR
   let sum = 0;
   let count = 0;
   gameState.draftedPlayers.forEach(p => {
@@ -420,13 +460,13 @@ function draftPlayer(player) {
   });
   gameState.squadOvr = Math.round(sum / count);
   
-  // Atualizar painéis de estatísticas
+  // Atualizar DOM de estatísticas
   document.getElementById("stat-ovr-val").innerText = gameState.squadOvr;
   document.getElementById("stat-count-val").innerText = `${count} / 11`;
   
-  gameState.currentDraftIndex++;
-  renderPitch();
-  renderDraftRound();
+  gameState.currentDraftIndex = gameState.draftedPlayers.indexOf(null);
+  
+  proximaRodadaDraft();
 }
 
 function finishDraft() {

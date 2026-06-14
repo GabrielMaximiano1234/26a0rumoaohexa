@@ -800,3 +800,20 @@ body, html {
 }
 
 .hidden { display: none !important; }
+
+/* Suporte Visual de Cartas Desabilitadas no Draft */
+.player-card.disabled-card {
+  opacity: 0.55;
+  filter: grayscale(0.85);
+  cursor: not-allowed;
+  background-color: #eaeaea !important;
+  border-color: #888888 !important;
+  box-shadow: 2px 2px 0px #888888 !important;
+}
+
+.player-card.disabled-card:hover {
+  transform: none !important;
+  box-shadow: 2px 2px 0px #888888 !important;
+  background-color: #eaeaea !important;
+}
+
