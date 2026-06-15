@@ -3,58 +3,161 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>26a0 Rumo ao Hexa - Início 🇧🇷</title>
+  <title>26a0 Rumo ao Hexa 🇧🇷</title>
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
 
-  <div class="lobby-container" id="tela-inicio">
-    <h1 class="logo-retro">26a0 <span>RUMO AO HEXA</span></h1>
-    <p style="text-align: center; font-weight: 700; margin-bottom: 25px; color: var(--br-blue);">Escale as maiores lendas da nossa pátria de chuteiras para conquistar a glória máxima mundial! [3]</p>
-    
-    <div class="lobby-card">
-      <!-- 1. Nome do Treinador -->
-      <div class="lobby-group">
-        <label for="coach-name-input">NOME DO TREINADOR</label>
-        <input type="text" id="coach-name-input" class="lobby-input" placeholder="Digite seu nome, Professor..." value="Mister">
-      </div>
-
-      <!-- 2. Esquema Tático -->
-      <div class="lobby-group">
-        <label>ESQUEMA TÁTICO [3]</label>
-        <div class="tactic-grid">
-          <div class="tactic-card active" data-tactic="4-3-3">
-            <div class="tactic-name">4-3-3</div>
-            <div class="tactic-desc">Ataque Total [3]</div>
-          </div>
-          <div class="tactic-card" data-tactic="4-4-2">
-            <div class="tactic-name">4-4-2</div>
-            <div class="tactic-desc">Equilíbrio Histórico [3]</div>
-          </div>
-          <div class="tactic-card" data-tactic="3-5-2">
-            <div class="tactic-name">3-5-2</div>
-            <div class="tactic-desc">Solidez & Alas [3]</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 3. Modo de Jogo -->
-      <div class="lobby-group">
-        <div class="toggle-container">
-          <div>
-            <div style="font-weight: 900; font-size: 0.95rem;">Modo Clássico [4]</div>
-            <div style="font-size: 0.75rem; color: #555;">Mostrar ratings reais e qualidades dos jogadores nas cartas [4].</div>
-          </div>
-          <label class="switch">
-            <input type="checkbox" id="mode-classic-toggle" checked>
-            <span class="slider"></span>
-          </label>
-        </div>
-      </div>
-
-      <!-- 4. Botão de Iniciar -->
-      <button type="button" id="btn-iniciar-draft" class="btn-start-game">CONVOCAR SELEÇÃO ➔</button>
+  <!-- Plano de Fundo Dinâmico de Futebol Flutuante -->
+  <div class="football-bg-drift" id="bg-drift-container">
+    <div class="drift-item" style="left: 10%; animation-delay: 0s; animation-duration: 48s;">
+      <svg viewBox="0 0 512 512" width="70" height="70" fill="none" stroke="#111111" stroke-width="16" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="256" cy="256" r="240"/>
+        <polygon points="256,150 345,215 311,320 201,320 167,215" />
+        <line x1="256" y1="150" x2="256" y2="16"/>
+        <line x1="345" y1="215" x2="471" y2="155"/>
+        <line x1="311" y1="320" x2="389" y2="440"/>
+        <line x1="201" y1="320" x2="123" y2="440"/>
+        <line x1="167" y1="215" x2="41" y2="155"/>
+      </svg>
     </div>
+    <div class="drift-item" style="left: 35%; animation-delay: -12s; animation-duration: 56s;">
+      <svg viewBox="0 0 512 512" width="75" height="75" fill="none" stroke="#111111" stroke-width="16" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M352,48 L288,112 L224,48 L160,48 L48,160 L112,224 L160,192 L160,464 L352,464 L352,192 L400,224 L464,160 L352,48 Z"/>
+        <line x1="160" y1="192" x2="352" y2="192"/>
+      </svg>
+    </div>
+    <div class="drift-item" style="left: 60%; animation-delay: -24s; animation-duration: 64s;">
+      <svg viewBox="0 0 512 512" width="85" height="85" fill="none" stroke="#111111" stroke-width="16" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="48" y="96" width="416" height="320" rx="40"/>
+        <circle cx="256" cy="256" r="60"/>
+        <line x1="256" y1="96" x2="256" y2="416"/>
+        <rect x="48" y="176" width="60" height="160"/>
+        <rect x="404" y="176" width="60" height="160"/>
+      </svg>
+    </div>
+  </div>
+
+  <div style="position: relative; z-index: 10; padding: 20px; box-sizing: border-box; width: 100%; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: flex-start;">
+    
+    <!-- 1. LOBBY DE CONFIGURAÇÃO (VISÍVEL POR PADRÃO) -->
+    <div id="tela-inicio" class="lobby-section">
+      <h1 class="logo-retro">26a0 <span>RUMO AO HEXA</span></h1>
+      <p style="text-align: center; font-weight: bold; margin-bottom: 25px; color: var(--br-blue);">Escale as maiores lendas da nossa pátria de chuteiras para conquistar a glória máxima mundial!</p>
+      
+      <div class="lobby-card">
+        <div class="lobby-group">
+          <label for="coach-name-input">NOME DO TREINADOR</label>
+          <input type="text" id="coach-name-input" class="lobby-input" placeholder="Seu nome, Professor..." value="Mister">
+        </div>
+
+        <div class="lobby-group">
+          <label>ESQUEMA TÁTICO</label>
+          <div class="tactic-grid">
+            <div class="tactic-card active" data-tactic="4-3-3">
+              <div class="tactic-name">4-3-3</div>
+              <div class="tactic-desc">Ataque Canarinho</div>
+            </div>
+            <div class="tactic-card" data-tactic="4-4-2">
+              <div class="tactic-name">4-4-2</div>
+              <div class="tactic-desc">Equilíbrio Histórico</div>
+            </div>
+            <div class="tactic-card" data-tactic="3-5-2">
+              <div class="tactic-name">3-5-2</div>
+              <div class="tactic-desc">Solidez & Alas Livres</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Toggle Modo Clássico -->
+        <div class="lobby-group" style="margin-top: 25px;">
+          <div class="toggle-container">
+            <div>
+              <div style="font-weight: 900; font-size: 0.95rem;">Modo Clássico</div>
+              <div style="font-size: 0.75rem; color: #555;">Mostrar ratings reais e descrições dos jogadores nas cartas.</div>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="mode-classic-toggle" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <button type="button" id="btn-iniciar-draft" class="btn-retro-start">CONVOCAR SELEÇÃO ➔</button>
+      </div>
+    </div>
+
+    <!-- 2. TELA DE SELEÇÃO DE CRAQUES (DRAFT) (OCULTA POR PADRÃO) -->
+    <div id="tela-draft" class="draft-layout hidden" style="display: none;">
+      <div class="draft-header-panel">
+        <div class="draft-title-container">
+          <h2 id="draft-round-title">CONVOCAÇÃO - CRAQUE 1 / 11</h2>
+          <p id="draft-roll-info">Escale seu jogador para a posição</p>
+        </div>
+        <div class="draft-stats-grid">
+          <div class="stat-badge"><span>Média OVR:</span><strong id="stat-ovr-val">--</strong></div>
+          <div class="stat-badge"><span>Convocados:</span><strong id="stat-count-val">0 / 11</strong></div>
+        </div>
+      </div>
+
+      <div class="draft-main-content">
+        <div class="pitch-container-wrapper">
+          <div class="soccer-pitch" id="squad-pitch-container"></div>
+        </div>
+        <div class="draft-panel-wrapper">
+          <div class="draft-panel-card">
+            <h2 id="draft-team-title" style="font-family: 'Anton', sans-serif; color: var(--br-green); margin: 0 0 5px 0;">ELENCO SORTEADO</h2>
+            <p id="draft-team-subtitle" style="font-size: 0.95rem; color: #555; margin: 0 0 15px 0;">Selecione um craque deste elenco para o seu time!</p>
+            <h3 class="draft-options-title">CRAQUES DISPONÍVEIS</h3>
+            <div class="options-grid" id="draft-players-options"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. SIMULADOR DA COPA DO MUNDO (OCULTA POR PADRÃO) -->
+    <div id="tela-simulador" class="draft-layout hidden" style="display: none;">
+      <div class="draft-header-panel">
+        <div class="draft-title-container">
+          <h2>CAMPANHA RUMO AO HEXA</h2>
+          <p id="sim-status-desc">Copa do Mundo - Fase de Grupos</p>
+        </div>
+        <div class="draft-stats-grid">
+          <div class="stat-badge"><span>Campanha:</span><strong id="sim-record-val">0 Vitórias</strong></div>
+        </div>
+      </div>
+
+      <div class="simulator-card">
+        <div class="sim-matchup">
+          <div class="sim-team">
+            <div class="sim-team-flag">🇧🇷</div>
+            <div id="sim-user-team-name">Sua Seleção</div>
+            <div id="sim-user-team-ovr" class="badge-ovr">OVR: --</div>
+          </div>
+          <div class="sim-score-box" id="sim-score-board">0 - 0</div>
+          <div class="sim-team">
+            <div class="sim-team-flag" id="sim-opp-flag">🇺🇾</div>
+            <div id="sim-opp-name">Oponente</div>
+            <div id="sim-opp-ovr" class="badge-ovr">OVR: --</div>
+          </div>
+        </div>
+
+        <button type="button" id="btn-simulate-match" class="btn-retro-start" style="margin: 20px auto; max-width: 400px; display: block;">INICIAR PARTIDA ➔</button>
+        <div id="sim-match-live-log" class="match-log-box">Aguardando início...</div>
+      </div>
+    </div>
+
+    <!-- 4. TELA DA CONQUISTA DO HEXA (OCULTA POR PADRÃO) -->
+    <div id="tela-vitoria" class="draft-layout hidden" style="display: none;">
+      <div class="victory-screen">
+        <div class="victory-stars">⭐️⭐️⭐️⭐️⭐️⭐️</div>
+        <h1 class="victory-title">O HEXA É REALIDADE!</h1>
+        <div class="victory-text-highlight" id="victory-header-msg"></div>
+        <div class="victory-text-desc" id="victory-desc-msg"></div>
+        <button type="button" onclick="location.reload()" class="btn-retro-start" style="max-width: 350px; margin: 0 auto;">CONVOCAR NOVA SELEÇÃO 🔄</button>
+      </div>
+    </div>
+
   </div>
 
   <script src="js/app.js"></script>
