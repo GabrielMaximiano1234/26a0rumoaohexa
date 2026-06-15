@@ -799,7 +799,7 @@ body, html {
   background: red;
 }
 
-.hidden { display: none !important; }
+.hidden { display: none; }
 
 /* Suporte Visual de Cartas Desabilitadas no Draft */
 .player-card.disabled-card {
